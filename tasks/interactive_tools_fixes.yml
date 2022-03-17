@@ -3,7 +3,7 @@
 - name: Add nip.io to interactive tool entry url
   lineinfile:
     path: "{{ interactivetool_manager_file }}"
-    regexp: ^(\s*rval = '\%s//%s-%s.%s.%s.%s)(.*)$
+    regexp: ^(\s*rval = '\%s//%s-%s.%s.%s.%s)(/.*)$
     backrefs: yes
     line: \1.nip.io\2
     state: present
