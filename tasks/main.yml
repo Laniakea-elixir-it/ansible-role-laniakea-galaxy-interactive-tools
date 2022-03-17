@@ -1,10 +1,5 @@
 ---
 
-- debug:
-    msg: "{{ docker_install_compose }}"
-  vars:
-    docker_install_compose: "{{ docker.docker_install_compose }}"
-
 - name: Install docker
   include_role:
     name: geerlingguy.docker
