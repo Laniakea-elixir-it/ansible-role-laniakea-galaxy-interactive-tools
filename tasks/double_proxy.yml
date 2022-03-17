@@ -1,0 +1,20 @@
+---
+
+- name: Install nginx host configs
+  template:
+    src: "{{ nginx_server_src_dir }}/{{ item }}.j2"
+    dest: "{{ nginx_conf_dir }}/sites-available/{{ item }}"
+    mode: 0444
+    backup: yes
+  loop: "{{ nginx_servers }}"
+  notify:
+    - Reload nginx
+
+- name: Enable hosts
+  file:
+    src: "{{ nginx_conf_dir }}/sites-available/{{ item }}"
+    dest: "{{ nginx_conf_dir }}/sites-enabled/{{ item }}"
+    state: link
+  loop: "{{ nginx_servers }}"
+  notify:
+    - Reload nginx

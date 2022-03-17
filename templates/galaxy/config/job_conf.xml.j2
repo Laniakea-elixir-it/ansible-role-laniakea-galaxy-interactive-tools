@@ -1,0 +1,45 @@
+<job_conf>
+    <plugins workers="4">
+        <plugin id="local" type="runner" load="galaxy.jobs.runners.local:LocalJobRunner"/>
+        <plugin id="pulsar_embedded" type="runner" load="galaxy.jobs.runners.pulsar:PulsarEmbeddedJobRunner">
+            <param id="pulsar_config">{{ pulsar_config_path }}</param>
+        </plugin>
+    </plugins>
+    <destinations default="local">
+        <destination id="local" runner="local"/>
+        <destination id="interactive_local" runner="pulsar_embedded">
+            <param id="docker_enabled">true</param>
+            <param id="docker_volumes">$defaults</param>
+            <param id="docker_sudo">false</param>
+            <param id="docker_net">bridge</param>
+            <param id="docker_auto_rm">true</param>
+            <param id="docker_set_user"></param>
+            <param id="require_container">true</param>
+            <param id="container_monitor_result">callback</param>
+            <!--<env id="REQUESTS_CA_BUNDLE">/etc/ssl/certs/ca-certificates.crt</env>-->
+        </destination>
+        </destinations>
+    <tools>
+        <tool destination="interactive_local" id="interactive_tool_geoexplorer" />
+        <tool destination="interactive_local" id="interactive_tool_openrefine" />
+        <tool destination="interactive_local" id="interactive_tool_rstudio" />
+        <tool destination="interactive_local" id="interactive_tool_askomics" />
+        <tool destination="interactive_local" id="interactive_tool_guacamole_desktop" />
+        <tool destination="interactive_local" id="interactive_tool_panoply" />
+        <tool destination="interactive_local" id="interactive_tool_vcf_iobio" />
+        <tool destination="interactive_local" id="interactive_tool_bam_iobio" />
+        <tool destination="interactive_local" id="interactive_tool_hicbrowser" />
+        <tool destination="interactive_local" id="interactive_tool_paraview" />
+        <tool destination="interactive_local" id="interactive_tool_wallace" />
+        <tool destination="interactive_local" id="interactive_tool_cellxgene" />
+        <tool destination="interactive_local" id="interactive_tool_higlass" />
+        <tool destination="interactive_local" id="interactive_tool_phinch" />
+        <tool destination="interactive_local" id="interactive_tool_wilson" />
+        <tool destination="interactive_local" id="interactive_tool_climate_notebook" />
+        <tool destination="interactive_local" id="interactive_tool_jupyter_notebook" />
+        <tool destination="interactive_local" id="interactive_tool_pyiron" />
+        <tool destination="interactive_local" id="interactive_tool_ethercalc" />
+        <tool destination="interactive_local" id="interactive_tool_neo4j" />
+        <tool destination="interactive_local" id="interactive_tool_radiant" />
+    </tools>
+ </job_conf>

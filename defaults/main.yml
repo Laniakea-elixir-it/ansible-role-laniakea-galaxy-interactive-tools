@@ -1,0 +1,67 @@
+---
+# Python 3 support
+pip_virtualenv_command: /usr/bin/python3 -m virtualenv
+
+# docker variables
+docker:
+  docker_install_compose: false
+
+# gie-proxy variables
+gie_proxy:
+  gie_proxy_dir: /home/galaxy/galaxy/gie-proxy/proxy
+  gie_proxy_git_version: main
+  gie_proxy_setup_nodejs: nodeenv
+  gie_proxy_virtualenv_command: "{{ pip_virtualenv_command }}"
+  gie_proxy_nodejs_version: "16.14.0"
+  gie_proxy_virtualenv: /home/galaxy/galaxy/gie-proxy/venv
+  gie_proxy_setup_service: systemd
+  gie_proxy_sessions_path: "{{ galaxy_mutable_data_dir }}/interactivetools_map.sqlite"
+
+# Galaxy
+galaxy_user:
+  name: galaxy
+galaxy_dir: /home/galaxy/galaxy
+galaxy_server_dir: "{{ galaxy_dir }}/server"
+galaxy_config_dir: "{{ galaxy_dir }}/config"
+galaxy_config_file: "{{ galaxy_config_dir }}/galaxy.yml"
+galaxy_mutable_data_dir: /home/galaxy/galaxy/var
+galaxy_tool_conf_interactive_path: "{{ galaxy_config_dir }}/tool_conf_interactive.xml"
+export_dir: /export
+
+galaxy_config:
+  galaxy:
+    job_config_file: "{{ galaxy_config_dir }}/job_conf.xml"
+    interactivetools_enable: true
+    interactivetools_map: "{{ gie_proxy.gie_proxy_sessions_path }}"
+    galaxy_infrastructure_url: "http://{{ inventory_hostname }}/"
+  uwsgi:
+    socket: 127.0.0.1:4001
+
+gie_proxy_port: 8000
+
+galaxy_tool_config_files:
+  - "{{ galaxy_server_dir }}/config/tool_conf.xml.sample"
+  - "{{ galaxy_tool_conf_interactive_path }}"
+
+galaxy_config_templates:
+  - src: galaxy/config/tool_conf_interactive.xml.j2
+    dest: "{{ galaxy_tool_conf_interactive_path }}"
+  - src: galaxy/config/job_conf.xml.j2
+    dest: "{{ galaxy_config.galaxy.job_config_file }}"
+  - src: galaxy/config/pulsar_app.yml.j2
+    dest: "{{ pulsar_config_path }}"
+
+# nginx variables
+nginx_servers:
+  - galaxy
+  - galaxy-gie-proxy
+nginx_server_src_dir: nginx
+nginx_conf_dir: /etc/nginx
+
+# docker_util scripts variables
+docker_util_file: "{{ galaxy_server_dir }}/lib/galaxy/tool_util/deps/docker_util.py"
+
+# pulsar variables
+pulsar_config_path: "{{ galaxy_config_dir }}/pulsar_app.yml"
+galaxy_job_working_directory: "{{ export_dir }}/database/job_working_dir/"
+galaxy_tool_dependency_dir: "{{ export_dir }}/tool_deps"

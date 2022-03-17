@@ -1,0 +1,35 @@
+---
+
+- debug:
+    msg: "{{ docker_install_compose }}"
+  vars:
+    docker_install_compose: "{{ docker.docker_install_compose }}"
+
+- name: Install docker
+  include_role:
+    name: geerlingguy.docker
+  vars:
+    docker_install_compose: "{{ docker.docker_install_compose }}"
+    docker_users:
+      - "{{ galaxy_user.name }}"
+
+- name: Install the proxy
+  include_role:
+    name: usegalaxy_eu.gie_proxy
+  vars:
+    gie_proxy_dir: "{{ gie_proxy.gie_proxy_dir }}"
+    gie_proxy_git_version: "{{ gie_proxy.gie_proxy_git_version }}"
+    gie_proxy_setup_nodejs: "{{ gie_proxy.gie_proxy_setup_nodejs }}"
+    gie_proxy_nodejs_package: "{{ gie_proxy.gie_proxy_nodejs_package }}"
+    gie_proxy_virtualenv_command: "{{ pip_virtualenv_command }}"
+    gie_proxy_nodejs_version: "{{ gie_proxy.gie_proxy_nodejs_version }}"
+    gie_proxy_virtualenv: "{{ gie_proxy.gie_proxy_virtualenv }}"
+    gie_proxy_setup_service: "{{ gie_proxy.gie_proxy_setup_service }}"
+    gie_proxy_sessions_path: "{{ gie_proxy.gie_proxy_sessions_path }}"
+
+- name: Proxying the proxy
+  include_tasks: double_proxy.yml
+
+- name: Enable Interactive Tools
+  include_tasks: interactive_tools.yml
+  tags: regex

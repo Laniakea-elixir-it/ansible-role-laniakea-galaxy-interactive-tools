@@ -1,0 +1,56 @@
+---
+
+- name: Fix docker_util.py parse_port_text function
+  template:
+    src: docker_util.py
+    dest: "{{ docker_util_file }}"
+  notify:
+    - Restart galaxy  
+
+- name: Add Interactive Tools configfiles
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: "{{ galaxy_config_templates }}"
+  notify:
+    - Restart galaxy
+
+- name: Enable interactive tools in galaxy config
+  lineinfile:
+    path: "{{ galaxy_config_dir }}/galaxy.yml"
+    regexp: '{{ item.key }}:.*'
+    insertafter: '^galaxy:'
+    line: '    {{ item.key }}: {{ item.value }}'
+    state: present
+  with_items: "{{ galaxy_config.galaxy | dict2items }}"
+  notify:
+    - Restart galaxy
+
+- name: Check if tool_conf_interactive.xml is specified in galaxy.yml
+  lineinfile:
+    path: "{{ galaxy_config_file }}"
+    regexp: '^(\s+tool_config_file:\s*.*){{ galaxy_tool_conf_interactive_path }}(.*)$'
+    state: absent
+  tags: regex
+  check_mode: yes
+  changed_when: false
+  register: tool_conf_interactive_exists
+
+- block:
+  - name: Append tool_conf_interactive.xml path in galaxy.yml
+    lineinfile:
+      path: "{{ galaxy_config_file }}"
+      regexp: '^(\s+tool_config_file:\s*.*)$'
+      line: '\1,"{{ galaxy_tool_conf_interactive_path }}"'
+      backrefs: yes
+
+  - name: Replace quotes for tool_conf_interactive.xml in galaxy.yml
+    replace:
+      path: "{{ galaxy_config_file }}"
+      regexp: "\"{{ galaxy_tool_conf_interactive_path }}\""
+      replace: "{{ galaxy_tool_conf_interactive_path }}"
+    notify:
+      - Restart galaxy
+
+  when: not tool_conf_interactive_exists.found
+
