@@ -59,8 +59,9 @@ nginx_servers:
 nginx_server_src_dir: nginx
 nginx_conf_dir: /etc/nginx
 
-# docker_util scripts variables
+# interactive tools fixes variables
 docker_util_file: "{{ galaxy_server_dir }}/lib/galaxy/tool_util/deps/docker_util.py"
+pulsar_runner_file: "{{ galaxy_server_dir }}/lib/galaxy/jobs/runners/pulsar.py"
 
 # pulsar variables
 pulsar_config_path: "{{ galaxy_config_dir }}/pulsar_app.yml"
