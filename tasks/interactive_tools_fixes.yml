@@ -1,0 +1,12 @@
+---
+
+- name: Fix docker_util.py parse_port_text function
+  lineinfile:
+    path: "{{ docker_util_file }}"
+    regex: ^\s{12}hostname, port = host.split\(':'\)
+    backrefs: yes
+    line: |2
+                  hostname, port = host.rsplit(':', 1)
+                  if hostname == '::':
+                      continue
+    state: present

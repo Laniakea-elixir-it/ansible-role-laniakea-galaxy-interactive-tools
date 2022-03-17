@@ -1,12 +1,5 @@
 ---
 
-- name: Fix docker_util.py parse_port_text function
-  template:
-    src: docker_util.py
-    dest: "{{ docker_util_file }}"
-  notify:
-    - Restart galaxy  
-
 - name: Add Interactive Tools configfiles
   template:
     src: "{{ item.src }}"

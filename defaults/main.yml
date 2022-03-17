@@ -18,6 +18,7 @@ gie_proxy:
   gie_proxy_sessions_path: "{{ galaxy_mutable_data_dir }}/interactivetools_map.sqlite"
 
 # Galaxy
+galaxy_commit_id: release_20.05
 galaxy_user:
   name: galaxy
 galaxy_dir: /home/galaxy/galaxy
