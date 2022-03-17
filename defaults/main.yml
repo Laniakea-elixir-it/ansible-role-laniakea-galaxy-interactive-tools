@@ -4,18 +4,18 @@ pip_virtualenv_command: /usr/bin/python3 -m virtualenv
 
 # docker variables
 docker:
-  docker_install_compose: false
+  install_compose: false
 
 # gie-proxy variables
 gie_proxy:
-  gie_proxy_dir: /home/galaxy/galaxy/gie-proxy/proxy
-  gie_proxy_git_version: main
-  gie_proxy_setup_nodejs: nodeenv
-  gie_proxy_virtualenv_command: "{{ pip_virtualenv_command }}"
-  gie_proxy_nodejs_version: "16.14.0"
-  gie_proxy_virtualenv: /home/galaxy/galaxy/gie-proxy/venv
-  gie_proxy_setup_service: systemd
-  gie_proxy_sessions_path: "{{ galaxy_mutable_data_dir }}/interactivetools_map.sqlite"
+  dir: /home/galaxy/galaxy/gie-proxy/proxy
+  git_version: main
+  setup_nodejs: nodeenv
+  virtualenv_command: "{{ pip_virtualenv_command }}"
+  nodejs_version: "16.14.0"
+  virtualenv: /home/galaxy/galaxy/gie-proxy/venv
+  setup_service: systemd
+  sessions_path: "{{ galaxy_mutable_data_dir }}/interactivetools_map.sqlite"
 
 # Galaxy
 galaxy_commit_id: release_20.05
@@ -33,7 +33,7 @@ galaxy_config:
   galaxy:
     job_config_file: "{{ galaxy_config_dir }}/job_conf.xml"
     interactivetools_enable: true
-    interactivetools_map: "{{ gie_proxy.gie_proxy_sessions_path }}"
+    interactivetools_map: "{{ gie_proxy.sessions_path }}"
     galaxy_infrastructure_url: "http://{{ inventory_hostname }}/"
   uwsgi:
     socket: 127.0.0.1:4001
