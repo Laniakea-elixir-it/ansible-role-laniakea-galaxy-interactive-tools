@@ -1,5 +1,13 @@
 ---
 
+- name: Add nip.io to interactive tool entry url
+  lineinfile:
+    path: "{{ interactivetool_manager_file }}"
+    regexp: ^(\s*rval = '\%s//%s-%s.%s.%s.%s)(.*)$
+    backrefs: yes
+    line: \1.nip.io\2
+    state: present
+
 - name: Fix docker_util.py parse_port_text function
   lineinfile:
     path: "{{ docker_util_file }}"
