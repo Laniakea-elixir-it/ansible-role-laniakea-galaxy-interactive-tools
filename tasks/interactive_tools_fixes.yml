@@ -36,3 +36,11 @@
                       if job_directory_path:
                           config_files.append(job_directory_path)
                   \2
+
+- name: Fix rstudio interactive tool url
+  lineinfile:
+    path: "{{ rstudio_interactive_file }}"
+    regexp: (\s*)<url>.*</url>
+    backrefs: yes
+    line: \1<url>rstudio/auth-sign-in</url>
+    state: present
