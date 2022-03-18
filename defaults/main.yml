@@ -61,11 +61,13 @@ nginx_conf_dir: /etc/nginx
 
 # interactive tools fixes variables
 interactive_dir: "{{ galaxy_server_dir }}/tools/interactive"
+galaxy_venv_python_packages: "{{ galaxy_dir }}/venv/lib/python3.6/site-packages"
 docker_util_file: "{{ galaxy_server_dir }}/lib/galaxy/tool_util/deps/docker_util.py"
 pulsar_runner_file: "{{ galaxy_server_dir }}/lib/galaxy/jobs/runners/pulsar.py"
 interactivetool_manager_file: "{{ galaxy_server_dir }}/lib/galaxy/managers/interactivetool.py"
 rstudio_interactive_file: "{{ interactive_dir }}/interactivetool_rstudio.xml"
 jupyter_interactive_file: "{{ interactive_dir }}/interactivetool_jupyter_notebook.xml"
+pulsar_kill_util_file: "{{ galaxy_venv_python_packages }}/pulsar/managers/util/kill.py"
 
 # pulsar variables
 pulsar_config_path: "{{ galaxy_config_dir }}/pulsar_app.yml"

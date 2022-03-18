@@ -53,3 +53,9 @@
       \1\2
       \1export HOME=/home/jovyan/ &&
       \3
+
+- name: Fix containers not removed when interactive tool is stopped
+  replace:
+    path: "{{ pulsar_kill_util_file }}"
+    regexp: (def kill_pid\(pid, use_psutil=True\):\n)\s*if use_psutil and Process:\n\s*_psutil_kill_pid\(pid\)\n\s*else:\n\s*_stock_kill_pid\(pid\)
+    replace: \1    subprocess.Popen(args=f"pkill -9 -P {pid}", shell=True)
