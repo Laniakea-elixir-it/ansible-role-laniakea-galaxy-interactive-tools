@@ -44,3 +44,12 @@
     backrefs: yes
     line: \1<url>rstudio/auth-sign-in</url>
     state: present
+
+- name: Fix jupyter notebook interactive tool command
+  replace:
+    path: "{{ jupyter_interactive_file }}"
+    regexp: ^(\s*)(cd \./jupyter/ &&)\n(\s*export PATH=/home/jovyan/\.local/bin:.\$PATH &&)
+    replace: |
+      \1\2
+      \1export HOME=/home/jovyan/ &&
+      \3
