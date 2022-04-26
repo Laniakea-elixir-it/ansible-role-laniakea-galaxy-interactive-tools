@@ -3,47 +3,35 @@
 - name: Add nip.io to interactive tool entry url
   lineinfile:
     path: "{{ interactivetool_manager_file }}"
-    regexp: ^(\s*rval = '\%s//%s-%s.%s.%s.%s)(/.*)$
+    regexp: ^(\s*rval = f'{protocol}//{self.get_entry_point_subdomain\(trans, entry_point\)}.{request_host})(/')$
     backrefs: yes
     line: \1.nip.io\2
     state: present
+  notify: Restart galaxy
 
-- name: Fix docker_util.py parse_port_text function
-  lineinfile:
-    path: "{{ docker_util_file }}"
-    regexp: ^\s{12}hostname, port = host.split\(':'\)
-    backrefs: yes
-    line: |2
-                  hostname, port = host.rsplit(':', 1)
-                  if hostname == '::':
-                      continue
-    state: present
-
-- name: Add config_files to pulsar queue_job function
-  replace:
-    path: "{{ pulsar_runner_file }}"
-    regexp: ^\s{16}(job_directory_files\.append\(tool_script\))\n\s{12}(client_job_description = ClientJobDescription\()
-    replace: |2
-                      \1
-                      config_files.append(tool_script)
-                  # Following is job destination environment variables
-                  env = client.env
-                  # extend it with tool defined environment variables
-                  tool_envs = job_wrapper.environment_variables
-                  env.extend(tool_envs)
-                  for tool_env in tool_envs:
-                      job_directory_path = tool_env.get("job_directory_path")
-                      if job_directory_path:
-                          config_files.append(job_directory_path)
-                  \2
-
-- name: Fix rstudio interactive tool url
+- name: Fix rstudio container version
   lineinfile:
     path: "{{ rstudio_interactive_file }}"
-    regexp: (\s*)<url>.*</url>
+    regexp: ^(\s*<container type="docker">quay.io/erasche/docker-rstudio-notebook:).*(</container>)
     backrefs: yes
-    line: \1<url>rstudio/auth-sign-in</url>
+    line: \1ie2\2
     state: present
+
+- name: Remove syslog from rstudio container startup script
+  lineinfile:
+    path: "{{ rstudio_interactive_file }}"
+    regexp: ^\s*/etc/init.d/syslog-ng start &&$
+    state: absent
+
+- name: Set www-root-path in rstudio container startup script
+  replace:
+    path: "{{ rstudio_interactive_file }}"
+    regexp: (sleep 5 &&\n)\n(\s*)(chmod 777 /tmp -R &&)
+    replace: |
+      \1
+      \2sed -i '2awww-root-path=/rstudio' /etc/rstudio/rserver.conf &&
+      \2pkill -9 rserver &&
+      \2\3
 
 - name: Fix jupyter notebook interactive tool command
   replace:
@@ -59,3 +47,4 @@
     path: "{{ pulsar_kill_util_file }}"
     regexp: (def kill_pid\(pid, use_psutil=True\):\n)\s*if use_psutil and Process:\n\s*_psutil_kill_pid\(pid\)\n\s*else:\n\s*_stock_kill_pid\(pid\)
     replace: \1    subprocess.Popen(args=f"pkill -9 -P {pid}", shell=True)
+  notify: Restart galaxy
