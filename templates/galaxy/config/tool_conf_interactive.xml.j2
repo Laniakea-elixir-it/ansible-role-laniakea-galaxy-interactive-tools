@@ -1,25 +1,7 @@
 <toolbox monitor="true">
     <section id="interactivetools" name="Interactive Tools">
-        <tool file="interactive/interactivetool_geoexplorer.xml" />
-        <tool file="interactive/interactivetool_openrefine.xml" />
-        <tool file="interactive/interactivetool_rstudio.xml" />
-        <tool file="interactive/interactivetool_askomics.xml" />
-        <tool file="interactive/interactivetool_guacamole_desktop.xml" />
-        <tool file="interactive/interactivetool_panoply.xml" />
-        <tool file="interactive/interactivetool_vcf_iobio.xml" />
-        <tool file="interactive/interactivetool_bam_iobio.xml" />
-        <tool file="interactive/interactivetool_hicbrowser.xml" />
-        <tool file="interactive/interactivetool_paraview.xml" />
-        <tool file="interactive/interactivetool_wallace.xml" />
-        <tool file="interactive/interactivetool_cellxgene.xml" />
-        <tool file="interactive/interactivetool_higlass.xml" />
-        <tool file="interactive/interactivetool_phinch.xml" />
-        <tool file="interactive/interactivetool_wilson.xml" />
-        <tool file="interactive/interactivetool_climate_notebook.xml" />
-        <tool file="interactive/interactivetool_jupyter_notebook.xml" />
-        <tool file="interactive/interactivetool_pyiron.xml" />
-        <tool file="interactive/interactivetool_ethercalc.xml" />
-        <tool file="interactive/interactivetool_neo4j.xml" />
-        <tool file="interactive/interactivetool_radiant.xml" />
+        {% for it_name in interactive_tools %}
+        <tool file="interactive/interactivetool_{{ it_name }}.xml" />
+        {% endfor %}
     </section>
 </toolbox>

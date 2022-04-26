@@ -20,26 +20,8 @@
         </destination>
         </destinations>
     <tools>
-        <tool destination="interactive_local" id="interactive_tool_geoexplorer" />
-        <tool destination="interactive_local" id="interactive_tool_openrefine" />
-        <tool destination="interactive_local" id="interactive_tool_rstudio" />
-        <tool destination="interactive_local" id="interactive_tool_askomics" />
-        <tool destination="interactive_local" id="interactive_tool_guacamole_desktop" />
-        <tool destination="interactive_local" id="interactive_tool_panoply" />
-        <tool destination="interactive_local" id="interactive_tool_vcf_iobio" />
-        <tool destination="interactive_local" id="interactive_tool_bam_iobio" />
-        <tool destination="interactive_local" id="interactive_tool_hicbrowser" />
-        <tool destination="interactive_local" id="interactive_tool_paraview" />
-        <tool destination="interactive_local" id="interactive_tool_wallace" />
-        <tool destination="interactive_local" id="interactive_tool_cellxgene" />
-        <tool destination="interactive_local" id="interactive_tool_higlass" />
-        <tool destination="interactive_local" id="interactive_tool_phinch" />
-        <tool destination="interactive_local" id="interactive_tool_wilson" />
-        <tool destination="interactive_local" id="interactive_tool_climate_notebook" />
-        <tool destination="interactive_local" id="interactive_tool_jupyter_notebook" />
-        <tool destination="interactive_local" id="interactive_tool_pyiron" />
-        <tool destination="interactive_local" id="interactive_tool_ethercalc" />
-        <tool destination="interactive_local" id="interactive_tool_neo4j" />
-        <tool destination="interactive_local" id="interactive_tool_radiant" />
+    {% for it_name in interactive_tools %}
+        <tool destination="interactive_local" id="interactive_tool_{{ it_name }}" />
+    {% endfor %}
     </tools>
  </job_conf>

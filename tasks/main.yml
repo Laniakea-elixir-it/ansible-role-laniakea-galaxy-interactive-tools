@@ -28,7 +28,7 @@
     gie_proxy_git_version: "{{ gie_proxy.git_version }}"
     gie_proxy_setup_nodejs: "{{ gie_proxy.setup_nodejs }}"
     gie_proxy_nodejs_package: "{{ gie_proxy.nodejs_package }}"
-    gie_proxy_virtualenv_command: "{{ pip_virtualenv_command }}"
+    gie_proxy_virtualenv_command: "{{ gie_proxy.virtualenv_command }}"
     gie_proxy_nodejs_version: "{{ gie_proxy.nodejs_version }}"
     gie_proxy_virtualenv: "{{ gie_proxy.virtualenv }}"
     gie_proxy_setup_service: "{{ gie_proxy.setup_service }}"
