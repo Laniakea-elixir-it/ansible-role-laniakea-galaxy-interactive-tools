@@ -1,23 +1,21 @@
 ---
 
-- name: Add Interactive Tools configfiles
+- name: Add Interactive Tools config files
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items: "{{ galaxy_config_templates }}"
-  notify:
-    - Restart galaxy
+  notify: Restart galaxy
 
-- name: Enable interactive tools in galaxy config
+- name: Set interactive tools variables in galaxy.yml config file
   lineinfile:
-    path: "{{ galaxy_config_dir }}/galaxy.yml"
+    path: "{{ galaxy_config_file }}"
     regexp: '{{ item.key }}:.*'
     insertafter: '^galaxy:'
     line: '    {{ item.key }}: {{ item.value }}'
     state: present
   with_items: "{{ galaxy_config.galaxy | dict2items }}"
-  notify:
-    - Restart galaxy
+  notify: Restart galaxy
 
 - name: Check if tool_conf_interactive.xml is specified in galaxy.yml
   lineinfile:
@@ -29,21 +27,10 @@
   changed_when: false
   register: tool_conf_interactive_exists
 
-- block:
-  - name: Append tool_conf_interactive.xml path in galaxy.yml
-    lineinfile:
-      path: "{{ galaxy_config_file }}"
-      regexp: '^(\s+tool_config_file:\s*.*)$'
-      line: '\1,"{{ galaxy_tool_conf_interactive_path }}"'
-      backrefs: yes
-
-  - name: Replace quotes for tool_conf_interactive.xml in galaxy.yml
-    replace:
-      path: "{{ galaxy_config_file }}"
-      regexp: "\"{{ galaxy_tool_conf_interactive_path }}\""
-      replace: "{{ galaxy_tool_conf_interactive_path }}"
-    notify:
-      - Restart galaxy
-
-  when: not tool_conf_interactive_exists.found
-
+- name: Append tool_conf_interactive.xml path in galaxy.yml
+  lineinfile:
+    path: "{{ galaxy_config_file }}"
+    regexp: '^(\s+tool_config_file:\s*.*)$'
+    line: \1,{{ galaxy_tool_conf_interactive_path }}
+    backrefs: yes
+  notify: Restart galaxy
