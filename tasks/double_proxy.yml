@@ -1,20 +1,16 @@
 ---
 
-- name: Install nginx host configs
+- name: Install nginx gie-proxy config
   template:
-    src: "{{ nginx_server_src_dir }}/{{ item }}.j2"
-    dest: "{{ nginx_conf_dir }}/sites-available/{{ item }}"
-    mode: 0444
+    src: "nginx/galaxy-gie-proxy.j2"
+    dest: "{{ nginx_conf_dir }}/sites-available/galaxy-gie-proxy"
+    mode: 0644
     backup: yes
-  loop: "{{ nginx_servers }}"
-  notify:
-    - Reload nginx
+  notify: Reload nginx
 
 - name: Enable hosts
   file:
-    src: "{{ nginx_conf_dir }}/sites-available/{{ item }}"
-    dest: "{{ nginx_conf_dir }}/sites-enabled/{{ item }}"
+    src: "{{ nginx_conf_dir }}/sites-available/galaxy-gie-proxy"
+    dest: "{{ nginx_conf_dir }}/sites-enabled/galaxy-gie-proxy"
     state: link
-  loop: "{{ nginx_servers }}"
-  notify:
-    - Reload nginx
+  notify: Reload nginx
