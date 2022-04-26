@@ -90,12 +90,14 @@ None
 Example Playbook
 ----------------
 
+```yml
 ---
 - name: Galaxy Interactive Tools
   hosts: all
   roles:
     - role: "/path/to/ansible-role-interactive-tools/"
       become: true
+```
 
 License
 -------
