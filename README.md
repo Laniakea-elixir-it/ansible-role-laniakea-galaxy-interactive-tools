@@ -1,38 +1,106 @@
-Role Name
-=========
+Laniakea Interactive Tools
+==========================
 
-A brief description of the role goes here.
+This role is used to configure [Interactive Tools](https://training.galaxyproject.org/training-material/topics/admin/tutorials/interactive-tools/tutorial.html)
+on Galaxy. Currently, it has been tested on Galaxy 21.09.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Required roles:
+* geerlingguy.docker, version 2.6.0
+* usegalaxy_eu.gie_proxy, version 0.0.2
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### Docker variables
+| Variable               | Description                                                    | Default                             |
+| ---------------------- | -------------------------------------------------------------- | ----------------------------------- |
+| docker.install_compose | If set to `true`, docker compose will be installed             | `false`                             |
+| docker_dir             | Path where docker images are stored                            | /export/docker                      |
+| docker_config          | Docker daemon configuration written to /etc/docker/daemon.json | { "data-root": "{{ docker_dir }}" } |
+
+### Galaxy gie-proxy variables
+| Variable           | Description                                                         | Default                                      |
+| ------------------ | ------------------------------------------------------------------- | -------------------------------------------- |
+| gie_proxy | List containing variables used by the [usegalaxy-eu.gie_proxy](https://github.com/usegalaxy-eu/ansible-gie-proxy) role | // |
+| dir                | Directory where the gie-proxy is installed                          | /home/galaxy/galaxy/gie-proxy/proxy          |
+| git_version        | Git reference to clone                                              | main                                         |
+| setup_nodejs       | Whether to install Node.js, options are `package` and `nodeenv`     | nodeenv                                      |
+| virtualenv_command | Command to create virtualenv when using nodeenv method              | /usr/bin/python3 -m virtualenv               |
+| nodejs_version     | Version of Node.js to install if using nodeenv method               | "16.14.0"                                    |
+| virtualenv         | Path of virtualenv into which nodeenv/Node.js/npm will be installed | /home/galaxy/galaxy/gie-proxy/venv           |
+| setup_service      | Whether to configure the proxy as a service, only option is systemd | systemd                                      |
+| sessions_path      | Path of Interactive Tools sessions map               | "{{ galaxy_mutable_data_dir }}/interactivetools_map.sqlite" |
+| gie_proxy_port     | Port where gie-proxy is listening                                   | 8000                                         |
+
+
+### Galaxy variables
+| Variable                          | Description                            | Default                                             |
+| --------------------------------- | -------------------------------------- | --------------------------------------------------- |
+| galaxy_user.name                  | Name of the user running galaxy        | galaxy                                              |
+| galaxy_dir                        | Galaxy base directory                  | /home/galaxy/galaxy                                 |
+| galaxy_server_dir                 | Galaxy server directory                | "{{ galaxy_dir }}/server"                           |
+| galaxy_config_dir                 | Galaxy config directory                | "{{ galaxy_dir }}/config"                           |
+| galaxy_config_file                | galaxy.yml config file path            | "{{ galaxy_config_dir }}/galaxy.yml"                |
+| galaxy_mutable_data_dir           | Galaxy var direcotry                   | /home/galaxy/galaxy/var                             |
+| galaxy_tool_conf_interactive_path | Path to tool_conf_interactive.xml file | "{{ galaxy_config_dir }}/tool_conf_interactive.xml" |
+| export_dir                        | Export dir where data is stored        | /export                                             |
+| galaxy_config.galaxy              | List of key, value pairs added in galaxy.yml | //                                            |
+| galaxy_config_templates           | List containing src and dest for galaxy config templates | //                                |
+
+#### galaxy_config.galaxy variables
+These are the variables stored in the galaxy_config.galaxy variable
+| Variable                                        | Description                           | Default                                   |
+| ----------------------------------------------- | ------------------------------------- | ----------------------------------------  |
+| galaxy_config.galaxy.job_config_file            | Path to job_conf.xml                  | "{{ galaxy_config_dir }}/job_conf.xml"    |
+|  galaxy_config.galaxy.interactivetools_enable   | Enables interactive tools             | true                                      |
+|  galaxy_config.galaxy.interactivetools_map      | Path to interactive tools session map | "{{ gie_proxy.sessions_path }}"           |
+|  galaxy_config.galaxy.galaxy_infrastructure_url | Galaxy infrastructure URL             | "http://{{ inventory_hostname }}/galaxy/" |
+
+### Nginx variables
+| Variable       | Description                            | Default    |
+| -------------- | -------------------------------------- | ---------- |
+| nginx_conf_dir | Path of configurations files for nginx | /etc/nginx |
+
+### Pulsar variables
+| Variable                   | Description                          | Default                                                  |
+| -------------------------- | ------------------------------------ | -------------------------------------------------------- |
+| pulsar_config_path         | Path to pulsar config file           | "{{ galaxy_config_dir }}/pulsar_app.yml"                 |
+| galaxy_job_working_dir     | Path to Galaxy job working directory | "{{ export_dir }}/galaxy/database/job_working_directory" |
+| galaxy_tool_dependency_dir | Galaxy tool_deps directory           | "{{ export_dir }}/tool_deps"                             |
+
+### Interactive tools variables
+| Variable                     | Description                          | Default                                                          |
+| ---------------------------- | ------------------------------------ | ---------------------------------------------------------------- |
+| interactive_tools            | List of interactive tools installed  | 'bam_iobio','jupyter_notebook','rstudio','vcf_iobio'             |
+| interactive_dir              | Interactive tools config dir         | "{{ galaxy_server_dir }}/tools/interactive"                      |
+| interactivetool_manager_file | Interactivetool.py manager path      | "{{ galaxy_server_dir }}/lib/galaxy/managers/interactivetool.py" |
+| rstudio_interactive_file     | interactivetool_rstudio.xml path     | "{{ interactive_dir }}/interactivetool_rstudio.xml"              |
+| jupyter_interactive_file     | interactivetool_jupyter_notebook.xml | "{{ interactive_dir }}/interactivetool_jupyter_notebook.xml"     |
+| pulsar_kill_util_file | kill.py pulsar manager path | "{{ galaxy_dir }}/venv/lib/python3.6/site-packages/pulsar/managers/util/kill.py" |
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+---
+- name: Galaxy Interactive Tools
+  hosts: all
+  roles:
+    - role: "/path/to/ansible-role-interactive-tools/"
+      become: true
 
 License
 -------
 
-BSD
-
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+[Daniele Colombo](https://github.com/dacolombo)
