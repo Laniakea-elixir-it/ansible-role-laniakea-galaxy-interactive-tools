@@ -22,7 +22,6 @@
     path: "{{ galaxy_config_file }}"
     regexp: '^(\s+tool_config_file:\s*.*){{ galaxy_tool_conf_interactive_path }}(.*)$'
     state: absent
-  tags: regex
   check_mode: yes
   changed_when: false
   register: tool_conf_interactive_exists
