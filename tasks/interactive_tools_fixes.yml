@@ -9,29 +9,31 @@
     state: present
   notify: Restart galaxy
 
-- name: Fix rstudio container version
-  lineinfile:
-    path: "{{ rstudio_interactive_file }}"
-    regexp: ^(\s*<container type="docker">quay.io/erasche/docker-rstudio-notebook:).*(</container>)
-    backrefs: yes
-    line: \1ie2\2
-    state: present
+- block:
+  - name: Fix rstudio container version
+    lineinfile:
+      path: "{{ rstudio_interactive_file }}"
+      regexp: ^(\s*<container type="docker">quay.io/erasche/docker-rstudio-notebook:).*(</container>)
+      backrefs: yes
+      line: \1ie2\2
+      state: present
 
-- name: Remove syslog from rstudio container startup script
-  lineinfile:
-    path: "{{ rstudio_interactive_file }}"
-    regexp: ^\s*/etc/init.d/syslog-ng start &&$
-    state: absent
+  - name: Remove syslog from rstudio container startup script
+    lineinfile:
+      path: "{{ rstudio_interactive_file }}"
+      regexp: ^\s*/etc/init.d/syslog-ng start &&$
+      state: absent
 
-- name: Set www-root-path in rstudio container startup script
-  replace:
-    path: "{{ rstudio_interactive_file }}"
-    regexp: (sleep 5 &&\n)\n(\s*)(chmod 777 /tmp -R &&)
-    replace: |
-      \1
-      \2sed -i '2awww-root-path=/rstudio' /etc/rstudio/rserver.conf &&
-      \2pkill -9 rserver &&
-      \2\3
+  - name: Set www-root-path in rstudio container startup script
+    replace:
+      path: "{{ rstudio_interactive_file }}"
+      regexp: (sleep 5 &&\n)\n(\s*)(chmod 777 /tmp -R &&)
+      replace: |
+        \1
+        \2sed -i '2awww-root-path=/rstudio' /etc/rstudio/rserver.conf &&
+        \2pkill -9 rserver &&
+        \2\3
+  when: "rstudio" in interactive_tools
 
 - name: Fix jupyter notebook interactive tool command
   replace:
@@ -41,6 +43,7 @@
       \1\2
       \1export HOME=/home/jovyan/ &&
       \3
+  when: "jupyter_notebook" in interactive_tools
 
 - name: Fix containers not removed when interactive tool is stopped
   replace:
