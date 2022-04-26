@@ -8,6 +8,18 @@
     docker_users:
       - "{{ galaxy_user.name }}"
 
+- name: Create docker image directory
+  file:
+    path: "{{ docker_dir }}"
+    state: directory
+    mode: "775"
+
+- name: Create config file /etc/docker/daemon.json
+  copy:
+    content: "{{ docker_config | to_nice_json }}\n"
+    dest: /etc/docker/daemon.json
+  notify: Restart docker
+
 - name: Install the proxy
   include_role:
     name: usegalaxy_eu.gie_proxy

@@ -5,6 +5,8 @@ pip_virtualenv_command: /usr/bin/python3 -m virtualenv
 # docker variables
 docker:
   install_compose: false
+docker_dir: /export/docker
+docker_config: { "data-root": "{{ docker_dir }}" }
 
 # gie-proxy variables
 gie_proxy:
