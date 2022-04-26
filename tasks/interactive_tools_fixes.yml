@@ -33,7 +33,7 @@
         \2sed -i '2awww-root-path=/rstudio' /etc/rstudio/rserver.conf &&
         \2pkill -9 rserver &&
         \2\3
-  when: "rstudio" in interactive_tools
+  when: '"rstudio" in interactive_tools'
 
 - name: Fix jupyter notebook interactive tool command
   replace:
@@ -43,7 +43,7 @@
       \1\2
       \1export HOME=/home/jovyan/ &&
       \3
-  when: "jupyter_notebook" in interactive_tools
+  when: '"jupyter_notebook" in interactive_tools'
 
 - name: Fix containers not removed when interactive tool is stopped
   replace:
