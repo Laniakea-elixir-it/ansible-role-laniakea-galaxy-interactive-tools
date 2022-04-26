@@ -27,8 +27,6 @@
 
 - name: Enable Interactive Tools
   include_tasks: interactive_tools.yml
-  tags: regex
 
 - name: Fix Interactive Tools for Galaxy release_20.05
   include_tasks: interactive_tools_fixes.yml
-  when: galaxy_commit_id == "release_20.05"
