@@ -9,8 +9,3 @@
   service:
     name: galaxy
     state: restarted
-
-- name: Restart docker
-  service:
-    name: docker
-    state: restarted

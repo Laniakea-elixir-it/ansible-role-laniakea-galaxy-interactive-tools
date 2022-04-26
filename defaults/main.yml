@@ -1,11 +1,5 @@
 ---
 
-# docker variables
-docker:
-  install_compose: false
-docker_dir: /export/docker
-docker_config: { "data-root": "{{ docker_dir }}" }
-
 # gie-proxy variables
 gie_proxy:
   dir: /home/galaxy/galaxy/gie-proxy/proxy

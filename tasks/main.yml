@@ -1,39 +1,5 @@
 ---
 
-- name: Install docker
-  include_role:
-    name: geerlingguy.docker
-  vars:
-    docker_install_compose: "{{ docker.install_compose }}"
-    docker_users:
-      - "{{ galaxy_user.name }}"
-
-- name: Create docker image directory
-  file:
-    path: "{{ docker_dir }}"
-    state: directory
-    mode: "775"
-
-- name: Create config file /etc/docker/daemon.json
-  copy:
-    content: "{{ docker_config | to_nice_json }}\n"
-    dest: /etc/docker/daemon.json
-  notify: Restart docker
-
-- name: Install the proxy
-  include_role:
-    name: usegalaxy_eu.gie_proxy
-  vars:
-    gie_proxy_dir: "{{ gie_proxy.dir }}"
-    gie_proxy_git_version: "{{ gie_proxy.git_version }}"
-    gie_proxy_setup_nodejs: "{{ gie_proxy.setup_nodejs }}"
-    gie_proxy_nodejs_package: "{{ gie_proxy.nodejs_package }}"
-    gie_proxy_virtualenv_command: "{{ gie_proxy.virtualenv_command }}"
-    gie_proxy_nodejs_version: "{{ gie_proxy.nodejs_version }}"
-    gie_proxy_virtualenv: "{{ gie_proxy.virtualenv }}"
-    gie_proxy_setup_service: "{{ gie_proxy.setup_service }}"
-    gie_proxy_sessions_path: "{{ gie_proxy.sessions_path }}"
-
 - name: Proxying the proxy
   include_tasks: double_proxy.yml
 

@@ -7,19 +7,22 @@ on Galaxy. Currently, it has been tested on Galaxy 21.09.
 Requirements
 ------------
 
-Required roles:
-* geerlingguy.docker, version 2.6.0
-* usegalaxy_eu.gie_proxy, version 0.0.2
+Docker needs to be installed for interactive tools to work and the user galaxy should be added to the docker users.
+
+For example, using the geerlingguy.docker role:
+```yml
+---
+- name: Install docker
+  include_role:
+    name: geerlingguy.docker
+  vars:
+    docker_install_compose: false
+    docker_users: 
+      - galaxy
+```
 
 Role Variables
 --------------
-
-### Docker variables
-| Variable               | Description                                                    | Default                             |
-| ---------------------- | -------------------------------------------------------------- | ----------------------------------- |
-| docker.install_compose | If set to `true`, docker compose will be installed             | `false`                             |
-| docker_dir             | Path where docker images are stored                            | /export/docker                      |
-| docker_config          | Docker daemon configuration written to /etc/docker/daemon.json | { "data-root": "{{ docker_dir }}" } |
 
 ### Galaxy gie-proxy variables
 | Variable           | Description                                                         | Default                                      |
@@ -85,7 +88,8 @@ These are the variables stored in the galaxy_config.galaxy variable
 Dependencies
 ------------
 
-None
+Required roles:
+* usegalaxy_eu.gie_proxy, version 0.0.2
 
 Example Playbook
 ----------------
