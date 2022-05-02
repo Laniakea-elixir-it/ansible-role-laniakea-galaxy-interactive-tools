@@ -37,6 +37,8 @@ galaxy_config_templates:
   - src: galaxy/config/pulsar_app.yml.j2
     dest: "{{ pulsar_config_path }}"
 
+galaxy_user: galaxy
+
 # nginx variables
 nginx_conf_dir: /etc/nginx
 
