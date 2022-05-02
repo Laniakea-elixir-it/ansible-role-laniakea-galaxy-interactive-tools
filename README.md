@@ -4,22 +4,6 @@ Laniakea Interactive Tools
 This role is used to configure [Interactive Tools](https://training.galaxyproject.org/training-material/topics/admin/tutorials/interactive-tools/tutorial.html)
 on Galaxy. Currently, it has been tested on Galaxy 21.09.
 
-Requirements
-------------
-
-Docker needs to be installed for interactive tools to work and the user galaxy should be added to the docker users.
-
-For example, using the geerlingguy.docker role:
-```yml
----
-- name: Install docker
-  include_role:
-    name: geerlingguy.docker
-  vars:
-    docker_install_compose: false
-    docker_users: 
-      - galaxy
-```
 
 Role Variables
 --------------
@@ -42,25 +26,25 @@ Role Variables
 ### Galaxy variables
 | Variable                          | Description                            | Default                                             |
 | --------------------------------- | -------------------------------------- | --------------------------------------------------- |
-| galaxy_user.name                  | Name of the user running galaxy        | galaxy                                              |
+| galaxy_user                       | Name of the user running galaxy        | galaxy                                              |
 | galaxy_dir                        | Galaxy base directory                  | /home/galaxy/galaxy                                 |
 | galaxy_server_dir                 | Galaxy server directory                | "{{ galaxy_dir }}/server"                           |
 | galaxy_config_dir                 | Galaxy config directory                | "{{ galaxy_dir }}/config"                           |
 | galaxy_config_file                | galaxy.yml config file path            | "{{ galaxy_config_dir }}/galaxy.yml"                |
 | galaxy_mutable_data_dir           | Galaxy var direcotry                   | /home/galaxy/galaxy/var                             |
 | galaxy_tool_conf_interactive_path | Path to tool_conf_interactive.xml file | "{{ galaxy_config_dir }}/tool_conf_interactive.xml" |
-| export_dir                        | Export dir where data is stored        | /export                                             |
+| export_dir                        | Export dir where data and docker images are stored | /export                                 |
 | galaxy_config.galaxy              | List of key, value pairs added in galaxy.yml | //                                            |
 | galaxy_config_templates           | List containing src and dest for galaxy config templates | //                                |
 
 #### galaxy_config.galaxy variables
 These are the variables stored in the galaxy_config.galaxy variable
-| Variable                                        | Description                           | Default                                   |
-| ----------------------------------------------- | ------------------------------------- | ----------------------------------------  |
-| galaxy_config.galaxy.job_config_file            | Path to job_conf.xml                  | "{{ galaxy_config_dir }}/job_conf.xml"    |
-|  galaxy_config.galaxy.interactivetools_enable   | Enables interactive tools             | true                                      |
-|  galaxy_config.galaxy.interactivetools_map      | Path to interactive tools session map | "{{ gie_proxy.sessions_path }}"           |
-|  galaxy_config.galaxy.galaxy_infrastructure_url | Galaxy infrastructure URL             | "http://{{ inventory_hostname }}/galaxy/" |
+| Variable                                       | Description                           | Default                                   |
+| ---------------------------------------------- | ------------------------------------- | ----------------------------------------  |
+| galaxy_config.galaxy.job_config_file           | Path to job_conf.xml                  | "{{ galaxy_config_dir }}/job_conf.xml"    |
+| galaxy_config.galaxy.interactivetools_enable   | Enables interactive tools             | true                                      |
+| galaxy_config.galaxy.interactivetools_map      | Path to interactive tools session map | "{{ gie_proxy.sessions_path }}"           |
+| galaxy_config.galaxy.galaxy_infrastructure_url | Galaxy infrastructure URL             | "http://{{ inventory_hostname }}/galaxy/" |
 
 ### Nginx variables
 | Variable       | Description                            | Default    |
@@ -89,6 +73,7 @@ Dependencies
 ------------
 
 Required roles:
+* geerlingguy.docker, version 2.6.0
 * usegalaxy_eu.gie_proxy, version 0.0.2
 
 Example Playbook
