@@ -2,7 +2,7 @@ galaxy_info:
   author: Daniele Colombo
   description: Configure Interactive Tools on Galaxy
   license: Apache-2.0
-  role_name: interactive_tools
+  role_name: galaxy_interactive_tools
   min_ansible_version: 2.9
   platforms:
    - name: EL
