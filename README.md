@@ -26,25 +26,25 @@ Role Variables
 ### Galaxy variables
 | Variable                          | Description                            | Default                                             |
 | --------------------------------- | -------------------------------------- | --------------------------------------------------- |
-| galaxy_user                       | Name of the user running galaxy        | galaxy                                              |
-| galaxy_dir                        | Galaxy base directory                  | /home/galaxy/galaxy                                 |
-| galaxy_server_dir                 | Galaxy server directory                | "{{ galaxy_dir }}/server"                           |
-| galaxy_config_dir                 | Galaxy config directory                | "{{ galaxy_dir }}/config"                           |
-| galaxy_config_file                | galaxy.yml config file path            | "{{ galaxy_config_dir }}/galaxy.yml"                |
+| laniakea_galaxy_user              | Name of the user running galaxy        | galaxy                                              |
+| galaxy_install_path               | Galaxy base directory                  | /home/galaxy/galaxy                                 |
+| laniakea_galaxy_server_dir        | Galaxy server directory                | "{{ galaxy_install_path }}/server"                  |
+| laniakea_galaxy_config_dir        | Galaxy config directory                | "{{ galaxy_install_path }}/config"                  |
+| laniakea_galaxy_config_file       | galaxy.yml config file path            | "{{ laniakea_galaxy_config_dir }}/galaxy.yml"       |
 | galaxy_mutable_data_dir           | Galaxy var direcotry                   | /home/galaxy/galaxy/var                             |
-| galaxy_tool_conf_interactive_path | Path to tool_conf_interactive.xml file | "{{ galaxy_config_dir }}/tool_conf_interactive.xml" |
+| galaxy_tool_conf_interactive_path | Path to tool_conf_interactive.xml file | "{{ laniakea_galaxy_config_dir }}/tool_conf_interactive.xml" |
 | export_dir                        | Export dir where data and docker images are stored | /export                                 |
-| galaxy_config.galaxy              | List of key, value pairs added in galaxy.yml | //                                            |
+| interactive_tools_galaxy_config.galaxy | List of key, value pairs added in galaxy.yml | //                                       |
 | galaxy_config_templates           | List containing src and dest for galaxy config templates | //                                |
 
-#### galaxy_config.galaxy variables
-These are the variables stored in the galaxy_config.galaxy variable
-| Variable                                       | Description                           | Default                                   |
-| ---------------------------------------------- | ------------------------------------- | ----------------------------------------  |
-| galaxy_config.galaxy.job_config_file           | Path to job_conf.xml                  | "{{ galaxy_config_dir }}/job_conf.xml"    |
-| galaxy_config.galaxy.interactivetools_enable   | Enables interactive tools             | true                                      |
-| galaxy_config.galaxy.interactivetools_map      | Path to interactive tools session map | "{{ gie_proxy.sessions_path }}"           |
-| galaxy_config.galaxy.galaxy_infrastructure_url | Galaxy infrastructure URL             | "http://{{ inventory_hostname }}/galaxy/" |
+#### interactive_tools_galaxy_config.galaxy variables
+These are the variables stored in the interactive_tools_galaxy_config.galaxy variable, as written in the galaxy.yml config file
+| Variable                  | Description                           | Default                                         |
+| ------------------------- | ------------------------------------- | ----------------------------------------------  |
+| job_config_file           | Path to job_conf.xml                  | "{{ laniakea_galaxy_config_dir }}/job_conf.xml" |
+| interactivetools_enable   | Enables interactive tools             | true                                            |
+| interactivetools_map      | Path to interactive tools session map | "{{ gie_proxy.sessions_path }}"                 |
+| galaxy_infrastructure_url | Galaxy infrastructure URL             | "http://{{ inventory_hostname }}/galaxy/"       |
 
 ### Nginx variables
 | Variable       | Description                            | Default    |
@@ -54,7 +54,7 @@ These are the variables stored in the galaxy_config.galaxy variable
 ### Pulsar variables
 | Variable                   | Description                          | Default                                                  |
 | -------------------------- | ------------------------------------ | -------------------------------------------------------- |
-| pulsar_config_path         | Path to pulsar config file           | "{{ galaxy_config_dir }}/pulsar_app.yml"                 |
+| pulsar_config_path         | Path to pulsar config file           | "{{ laniakea_galaxy_config_dir }}/pulsar_app.yml"        |
 | galaxy_job_working_dir     | Path to Galaxy job working directory | "{{ export_dir }}/galaxy/database/job_working_directory" |
 | galaxy_tool_dependency_dir | Galaxy tool_deps directory           | "{{ export_dir }}/tool_deps"                             |
 
@@ -62,11 +62,11 @@ These are the variables stored in the galaxy_config.galaxy variable
 | Variable                     | Description                          | Default                                                          |
 | ---------------------------- | ------------------------------------ | ---------------------------------------------------------------- |
 | interactive_tools            | List of interactive tools installed  | 'bam_iobio','jupyter_notebook','rstudio','vcf_iobio'             |
-| interactive_dir              | Interactive tools config dir         | "{{ galaxy_server_dir }}/tools/interactive"                      |
-| interactivetool_manager_file | Interactivetool.py manager path      | "{{ galaxy_server_dir }}/lib/galaxy/managers/interactivetool.py" |
+| interactive_dir              | Interactive tools config dir         | "{{ laniakea_galaxy_server_dir }}/tools/interactive"             |
+| interactivetool_manager_file | Interactivetool.py manager path      | "{{ laniakea_galaxy_server_dir }}/lib/galaxy/managers/interactivetool.py" |
 | rstudio_interactive_file     | interactivetool_rstudio.xml path     | "{{ interactive_dir }}/interactivetool_rstudio.xml"              |
 | jupyter_interactive_file     | interactivetool_jupyter_notebook.xml | "{{ interactive_dir }}/interactivetool_jupyter_notebook.xml"     |
-| pulsar_kill_util_file | kill.py pulsar manager path | "{{ galaxy_dir }}/venv/lib/python3.6/site-packages/pulsar/managers/util/kill.py" |
+| pulsar_kill_util_file | kill.py pulsar manager path | "{{ galaxy_install_path }}/venv/lib/python3.6/site-packages/pulsar/managers/util/kill.py" |
 
 
 Dependencies

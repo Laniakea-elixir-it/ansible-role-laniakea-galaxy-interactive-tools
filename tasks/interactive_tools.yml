@@ -9,17 +9,17 @@
 
 - name: Set interactive tools variables in galaxy.yml config file
   lineinfile:
-    path: "{{ galaxy_config_file }}"
+    path: "{{ laniakea_galaxy_config_file }}"
     regexp: '{{ item.key }}:.*'
     insertafter: '^galaxy:'
     line: '    {{ item.key }}: {{ item.value }}'
     state: present
-  with_items: "{{ galaxy_config.galaxy | dict2items }}"
+  with_items: "{{ interactive_tools_galaxy_config.galaxy | dict2items }}"
   notify: Restart galaxy
 
 - name: Check if tool_conf_interactive.xml is specified in galaxy.yml
   lineinfile:
-    path: "{{ galaxy_config_file }}"
+    path: "{{ laniakea_galaxy_config_file }}"
     regexp: '^(\s+tool_config_file:\s*.*){{ galaxy_tool_conf_interactive_path }}(.*)$'
     state: absent
   check_mode: yes
@@ -28,7 +28,7 @@
 
 - name: Append tool_conf_interactive.xml path in galaxy.yml
   lineinfile:
-    path: "{{ galaxy_config_file }}"
+    path: "{{ laniakea_galaxy_config_file }}"
     regexp: '^(\s+tool_config_file:\s*.*)$'
     line: \1,{{ galaxy_tool_conf_interactive_path }}
     backrefs: yes

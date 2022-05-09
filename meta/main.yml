@@ -14,7 +14,7 @@ dependencies:
     vars:
       docker_install_compose: false
       docker_users: 
-        - "{{ galaxy_user }}"
+        - "{{ laniakea_galaxy_user.name }}"
       docker_daemon_options: { "data-root": "{{ export_dir }}/docker_image" }
 
   - role: usegalaxy_eu.gie_proxy
