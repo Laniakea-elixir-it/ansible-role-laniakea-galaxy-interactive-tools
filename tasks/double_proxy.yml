@@ -6,11 +6,11 @@
     dest: "{{ nginx_conf_dir }}/sites-available/galaxy-gie-proxy"
     mode: 0644
     backup: yes
-  notify: Reload nginx
+  notify: Restart nginx
 
 - name: Enable hosts
   file:
     src: "{{ nginx_conf_dir }}/sites-available/galaxy-gie-proxy"
     dest: "{{ nginx_conf_dir }}/sites-enabled/galaxy-gie-proxy"
     state: link
-  notify: Reload nginx
+  notify: Restart nginx

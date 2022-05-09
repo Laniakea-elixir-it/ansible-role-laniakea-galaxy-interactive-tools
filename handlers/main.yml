@@ -1,9 +1,9 @@
 ---
 
-- name: Reload nginx
+- name: Restart nginx
   service:
     name: nginx
-    state: reloaded
+    state: restarted
     
 - name: Restart galaxy
   service:
