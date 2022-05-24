@@ -1,4 +1,4 @@
 - src: geerlingguy.docker
-  version: 2.6.0
+  version: 4.2.2
 - src: usegalaxy_eu.gie_proxy
   version: 0.0.2
